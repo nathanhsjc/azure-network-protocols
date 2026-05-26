@@ -12,7 +12,7 @@ In this tutorial, we observe various network traffic to and from Azure Virtual M
 - Microsoft Azure (Virtual Machines/Compute)
 - Remote Desktop
 - Various Command-Line Tools
-- Various Network Protocols (SSH, RDH, DNS, HTTP/S, ICMP)
+- Various Network Protocols (SSH, RDP, DNS, HTTP/S, ICMP)
 - Wireshark (Protocol Analyzer)
 
 <h2>Operating Systems Used </h2>
@@ -38,7 +38,7 @@ In this tutorial, we observe various network traffic to and from Azure Virtual M
 In this project we will be using a Windows 10 virtual machine and a Linux virtual machine. We will begin by creating a resource group in Microsoft Azure and labeling it with a name and selection a region. 
 After this has been completed, navigate to the virtual machine dashboard in azure and create a new virtual machine in the same resource group and region. We will be creating two virtual machines, we will start with the 1st one being the Windows 10 virtual machine. The image will be a Windows 10 Pro, version 22h2 - x64 Gen2. 
 
-Next we will create the Linux virtual machine. This will be in the same resource group as the Windows virtual machine. The image will be a Ubuntu Server 22.04 LTS - x64 Gen2. For this lab, the authetnication type has been set as password. The same credential login info for both virtual machines will be the same. 
+Next we will create the Linux virtual machine. This will be in the same resource group as the Windows virtual machine. The image will be a Ubuntu Server 22.04 LTS - x64 Gen2. For this lab, the authentication type has been set as password. The same credential login info for both virtual machines will be the same. 
 
 We will connect into the Windows 10 virtual machine first by using Remote Desktop Protocol (RDP). Obtain the public IP address for the Windows 10 virtual machine > open up RDP > paste the public IP address into RDP with the login information to connect.
 </p>
@@ -60,7 +60,7 @@ In the Windows virtual machine we will be installing Wireshark. Click on Microso
 
 </p>
 <p>
-We will be ovserving ICMP (Internet Control Message Protocol) which is used to test connectiivty between two devices. In Wireshark we will be able to see all the traffic that is being generated. After opening up Wireshark, click on Ethernet then on the blue shark fin in the upper left corner. This will start the capturing packet process from Ethernet. In the photo example you will be able to see all the network traffic that's occurring on the Windows virtual machine. 
+We will be observing ICMP (Internet Control Message Protocol) which is used to test connectivity between two devices. In Wireshark we will be able to see all the traffic that is being generated. After opening up Wireshark, click on Ethernet then on the blue shark fin in the upper left corner. This will start the capturing packet process from Ethernet. In the photo example you will be able to see all the network traffic that's occurring on the Windows virtual machine. 
 <br />
 
 <p>
@@ -89,7 +89,7 @@ We will do a ping that loops in PowerShell. Type in PowerShell "ping <private IP
 
 </p>
 <p>
-In this step we will open up the Network Security Group in Azure and disable incoming traffic in the Linux virtual machine. The Network Security Group is the Azure version of a firewall. This will be disabled y configuring the network security group. Navigate back to the Azure portal > Virtual Machines > Linux virtual machine. Navigate to the Networking tab > Network settings and click on Network security group: in the rgiht corner. After you have clicked on that click on settings in the left hand corner. Click Inbound security rules and from there we will begin the network security group configuration. Click + Add as this will crete a new rule. In the Destination port range field, input an asterisk * symbol as ICMP doen't use ports. Select IMCPv4 as the protocol > select Deny as the action > set priority range to 290 (290) is the lowest priority rule in the Inbound security rules meaning it will take priority over the larger number security rules, the blocking rule will take precedence). Once you have clicked add, the ICMP traffic from any source will be denied.
+In this step we will open up the Network Security Group in Azure and disable incoming traffic in the Linux virtual machine. The Network Security Group is the Azure version of a firewall. This will be disabled y configuring the network security group. Navigate back to the Azure portal > Virtual Machines > Linux virtual machine. Navigate to the Networking tab > Network settings and click on Network security group: in the right corner. After you have clicked on that click on settings in the left hand corner. Click Inbound security rules and from there we will begin the network security group configuration. Click + Add as this will create a new rule. In the Destination port range field, input an asterisk * symbol as ICMP doesn't use ports. Select ICMPv4 as the protocol > select Deny as the action > set priority range to 290 (290) is the lowest priority rule in the Inbound security rules meaning it will take priority over the larger number security rules, the blocking rule will take precedence). Once you have clicked add, the ICMP traffic from any source will be denied.
 <b />
 
 <p>
@@ -100,7 +100,7 @@ In this step we will open up the Network Security Group in Azure and disable inc
   
 </p>
 <p>
-Now that tue rule has been created, in the Windows virtual machine you will be able to observe that "Request timed out" will populate in PowerShell. Wireshark will show (no response found) meaning that the rule has now went into effect. To cancel this, go back into the Inbound security rules of the Linux virtual machine in azure and click the trash can on the 290 rule to delete it. The rule will be deleted and the pinging will now succeed. 
+Now that the rule has been created, in the Windows virtual machine you will be able to observe that "Request timed out" will populate in PowerShell. Wireshark will show (no response found) meaning that the rule has now went into effect. To cancel this, go back into the Inbound security rules of the Linux virtual machine in azure and click the trash can on the 290 rule to delete it. The rule will be deleted and the pinging will now succeed. 
 <b />
 
 <p>
@@ -110,7 +110,7 @@ Now that tue rule has been created, in the Windows virtual machine you will be a
   
 </p>
 <p>
-We will be observing SSH traffic in this portion. SSH is used to make a secure connection from one computer to another utilizing a command line. In Wireshark clear the "Apply a display filter" and tpy in ssh into the search bar to filter SSH traffic. Navigate back to Azure and retrieve the IP address of the Linux virtual machine. Open up PowerShell in the Windows virtual machine and connect to the Linux virtual machine. You will be using your login credentials that were made previously, in this lab the name labuser is being used. Type in ssh labuser@10.0.0.5. (ssh labuser@<private IP address >) the password you type will appear invisible for security reasons. After this has been done you will be able to observe the SSH traffic in Wireshark.
+We will be observing SSH traffic in this portion. SSH is used to make a secure connection from one computer to another utilizing a command line. In Wireshark clear the "Apply a display filter" and type in ssh into the search bar to filter SSH traffic. Navigate back to Azure and retrieve the IP address of the Linux virtual machine. Open up PowerShell in the Windows virtual machine and connect to the Linux virtual machine. You will be using your login credentials that were made previously, in this lab the name labuser is being used. Type in ssh labuser@10.0.0.5. (ssh labuser@<private IP address >) the password you type will appear invisible for security reasons. After this has been done you will be able to observe the SSH traffic in Wireshark.
 
 As a side note, to confirm that you are in the Linux virtual machine, you can type in commands like (id), (uname -a) which will give you information about your machine.
 Anything you type in PowerShell will generate incoming SSH traffic in Wireshark.
